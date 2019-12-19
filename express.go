@@ -77,11 +77,12 @@ func (ex *Express) Register(method string, args ...interface{}) {
 
 	var path string
 	var handler func(*Request)
-
+	// func(path string, req handler)
 	if len(args) == 2 {
 		path, _ = args[0].(string)
 		handler, _ = args[1].(func(*Request))
 	}
+	// func(req handler)
 	if len(args) == 1 {
 		path = "*"
 		handler, _ = args[0].(func(*Request))
@@ -114,7 +115,7 @@ func (ex *Express) Incomming(fctx *fasthttp.RequestCtx) {
 	ctx.FindHandler()
 
 }
-// FindHandler oo
+// FindHandler trying to match a route in array
 func (ctx *Request) FindHandler() {
 	method := string(ctx.Method())
 	path := string(ctx.Path())
