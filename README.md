@@ -30,7 +30,73 @@ func main() {
 }
 ```
 
-### API Documentation
+### Route paths
+Here are some examples of route paths based on strings.  
+This route path will match requests to the root route, /.
+```go
+app.Get("/", func(c *express.Context) {
+  c.Send("/")
+})
+```
+This route path will match requests to /about.
+```go
+app.Get("/about", func(c *express.Context) {
+  c.Send("/about")
+})
+```
+This route path will match requests to /random.text.
+```go
+app.Get("/random.text", func(c *express.Context) {
+  c.Send("/random.text")
+})
+```
+Here are some examples of route paths based on string patterns.  
+This route path will match **acd** and **abcd**.
+```go
+app.Get("/ab?cd", func(c *express.Context) {
+  c.Send("/ab?cd")
+})
+```
+ ~~This route path will match **abcd, abbcd, abbbcd**, and so on. ~~
+```go
+app.Get("/ab+cd", func(c *express.Context) {
+  // This doesn't work, have to fix it later
+  // ^/ab(.*)cd/?$ => ^ab/(.*)cd/?$
+  c.Send("/ab+cd")
+})
+```
+This route path will match **/abe** and **/abcde**.
+```go
+app.Get("/ab(cd)?e", func(c *express.Context) {
+  c.Send("/ab(cd)?e")
+})
+```
+
+### Route parameters
+Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values can be retreived with Params(key string), with the name of the route parameter specified in the path as their respective keys.
+
+```
+Route path:  /users/:userId/books/:bookId
+Request URL: http://localhost:8080/users/34/books/8989
+c.Params("userId") // STRING => 34
+c.Params("bookId") // STRING => 8989
+```
+
+To define routes with route parameters, simply specify the route parameters in the path of the route as shown below.
+```go
+app.Get("/users/:userId/books/:bookId", func(c *express.Context) {
+  c.Write(c.Params("userId"))
+  c.Write(c.Params("bookId"))
+})
+```
+```
+The name of route parameters must be made up of “word characters” ([A-Za-z0-9_]).
+```
+
+### Route Handlers
+
+
+### API reference
 The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
 
 ```go
