@@ -15,7 +15,7 @@ func main() {
 	app := express.Router()
 
 	app.Get("/api/:user", func(c *express.Context) {
-		c.Set("Server", "Express")
+		c.Set("x-dns-prefetch-control", "on")
 		c.Next()
 	})
 	app.Get("/api/:user", func(c *express.Context) {
@@ -74,8 +74,8 @@ app.Get("/ab(cd)?e", func(c *express.Context) {
 Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values can be retreived with **Params(key string)**, with the name of the route parameter specified in the path as their respective keys.
 
 ```
-Route path:  /users/:userId/books/:bookId
-Request URL: http://localhost:8080/users/34/books/8989
+Route path:           /users/:userId/books/:bookId
+Request URL:          http://localhost:8080/users/34/books/8989
 c.Params("userId") // STRING => 34
 c.Params("bookId") // STRING => 8989
 ```
