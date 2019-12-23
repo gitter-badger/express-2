@@ -18,7 +18,7 @@ go get -u github.com/fenny/express
 ```
 
 ## Getting started
-This app starts a server and listens on port 8080 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
+This app starts a server and listens on port 8080 for connections. The app responds with “Hello User!” for requests to the (/api/:user) route. For the favicon.ico it returns a 204 no content status code. For every other path, it will respond with a 404 Not Found.
 
 ```go
 package main
