@@ -1,15 +1,23 @@
-# Express for Go
+# Express for Go [![Build Status](https://travis-ci.org/fenny/express.svg?branch=master)](https://travis-ci.org/fenny/express?branch=master) [![GoDoc](https://godoc.org/github.com/fenny/express?status.svg)](http://godoc.org/github.com/fenny/express) [![fuzzit](https://app.fuzzit.dev/badge?org_id=express&branch=master)](https://fuzzit.dev) [![Go Report](https://goreportcard.com/badge/github.com/fenny/express)](https://goreportcard.com/report/github.com/fenny/express) [![Sourcegraph](https://sourcegraph.com/github.com/fenny/express/-/badge.svg)](https://sourcegraph.com/github.com/fenny/express?badge)
 Express is a router framework build on top of the fastest HTTP package [FastHTTP](https://github.com/valyala/fasthttp) for GO.
 This library is inspired by one of the most populair and well known web frameworks [ExpressJS](https://github.com/expressjs/express).
 
 This project is in alpha stage, do not use in production
 
-### Install
+[Credits](#install)  
+[Getting started](#getting-started)  
+[Route paths](#route-paths)  
+[Route parameters](#route-parameters)  
+[Route Handlers](#route-handlers)  
+[API reference](#api-reference)  
+[Credits](#credits)
+
+## Install
 ```
 go get -u github.com/fenny/express
 ```
 
-### Getting started
+## Getting started
 This app starts a server and listens on port 8080 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
 
 ```go
@@ -36,7 +44,7 @@ func main() {
 }
 ```
 
-### Route paths
+## Route paths
 Here are some examples of route paths based on strings.  
 This route path will match requests to the root route, **/**.
 ```go
@@ -78,7 +86,7 @@ app.Get("/ab(cd)?e", func(c *express.Context) {
 })
 ```
 
-### Route parameters
+## Route parameters
 Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values can be retreived with **Params(key string)**, with the name of the route parameter specified in the path as their respective keys.
 
 ```
@@ -99,11 +107,11 @@ app.Get("/users/:userId/books/:bookId", func(c *express.Context) {
 The name of route parameters must be made up of “word characters” ([A-Za-z0-9_]).
 ```
 
-### Route Handlers
+## Route Handlers
 You can provide multiple callback functions that behave like middleware to handle a request. By using the **Next()** function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call **Next()** it there’s no reason to proceed with the to the next middleware route.
 
-### API reference
-The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
+## API reference
+The **express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
 
 ```go
 app.Get("/user/:name", func(c *express.Context) {
@@ -169,3 +177,6 @@ app.Get("/user/:name", func(c *express.Context) {
   c.Type("html") // => c.Set("png", "image/png")
 })
 ```
+
+## Credits
+You can provide multiple callback functions that behave like middleware to handle a request. By using the **Next()** function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call **Next()** it there’s no reason to proceed with the to the next middleware route.
