@@ -10,7 +10,7 @@ This library is inspired by one of the most populair and well known web framewor
 [Route parameters](#route-parameters)  
 [Route Handlers](#route-handlers)  
 [API reference](#api-reference)  
-[Credits](#credits)
+[Credits](#credits--thanks)
 
 ## Install
 ```
