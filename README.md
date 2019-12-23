@@ -19,9 +19,9 @@ func main() {
 	app.Get("/api/:user", func(c *express.Context) {
 		c.Send("Hello " + c.Params("user))
 	})
-  app.All("*", func(c *express.Context) {
-    c.Status(404).Send("404 Not Found.")
-  })
+	app.All("*", func(c *express.Context) {
+		c.Status(404).Send("404 Not Found.")
+	})
 	app.Listen(8080)
 }
 ```
