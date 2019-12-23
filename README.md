@@ -4,7 +4,7 @@ This library is inspired by one of the most populair and well known web framewor
 
 **This project is in alpha stage, do not use in production**
 
-[Credits](#install)  
+[Install](#install)  
 [Getting started](#getting-started)  
 [Route paths](#route-paths)  
 [Route parameters](#route-parameters)  
