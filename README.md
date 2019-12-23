@@ -1,10 +1,10 @@
 # Express for Go [![GoDoc](https://godoc.org/github.com/fenny/express?status.svg)](http://godoc.org/github.com/fenny/express) [![fuzzit](https://app.fuzzit.dev/badge?org_id=express&branch=master)](https://fuzzit.dev) [![Go Report](https://goreportcard.com/badge/github.com/fenny/express)](https://goreportcard.com/report/github.com/fenny/express)
-Express is a router framework build on top of the fastest HTTP package [FastHTTP](https://github.com/valyala/fasthttp) for GO.
+Express is a router framework build on top of the fastest HTTP package [FastHTTP](https://github.com/valyala/fasthttp) for Go.  
 This library is inspired by one of the most populair and well known web frameworks [ExpressJS](https://github.com/expressjs/express).
 
 **This project is in alpha stage, do not use in production**
 
-[Install](#install)  
+[Credits](#install)  
 [Getting started](#getting-started)  
 [Route paths](#route-paths)  
 [Route parameters](#route-parameters)  
@@ -175,6 +175,9 @@ app.Get("/user/:name", func(c *express.Context) {
   c.Type("json") // => c.Set("Content-Type", "application/json")
   c.Type("html") // => c.Set("Content-Type", "text/html")
   c.Type("html") // => c.Set("png", "image/png")
+
+  // FastHttp contains all functions provided by the FastHTTP engine. In case express does not cover your needs, you can always fallback using the FastHTTP struct
+  c.FastHttp
 })
 ```
 
