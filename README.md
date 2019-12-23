@@ -42,16 +42,48 @@ fmt.Println(c.Ip())
 ### c.Method()
 Contains a string corresponding to the HTTP method of the request: GET, POST, PUT, and so on.
 ```go
-// GET http://localhost:8080
+// GET example.com
 fmt.Println(c.Method())
 // => 'GET'
 ```
 
 
-### c.Method()
-Contains a string corresponding to the HTTP method of the request: GET, POST, PUT, and so on.
+### c.Url()
+Request URL string. This contains only the URL that is present in the actual HTTP request. 
 ```go
-// GET http://localhost:8080
+// GET /search?q=something
 fmt.Println(c.Method())
-// => 'GET'
+// => '/search?q=something'
+```
+
+### c.Params(key string)
+This method returns the named route “parameters”. For example, if you have the route /user/:name, then the “name” property is available as c.Params("name").
+```go
+// GET /user/joe
+fmt.Println(c.Params("name))
+// => 'ryan'
+```
+
+### c.Path()
+Contains the path part of the request URL.
+```go
+// example.com/users?sort=desc
+fmt.Println(c.Params("name))
+// => '/users'
+```
+
+### c.Protocol()
+Contains the request protocol string: either http or (for TLS requests) https.
+```go
+// GET https://example.com
+fmt.Println(c.Protocol())
+// => 'https'
+```
+
+### c.Protocol()
+This method returns the named route “parameters”. For example, if you have the route /user/:name, then the “name” property is available as c.Params("name").
+```go
+// GET https://example.com
+fmt.Println(c.Protocol())
+// => 'https'
 ```
