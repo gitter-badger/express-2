@@ -1,8 +1,8 @@
-# Express for Go [![GoDoc](https://godoc.org/github.com/fenny/express?status.svg)](http://godoc.org/github.com/fenny/express) [![fuzzit](https://app.fuzzit.dev/badge?org_id=express&branch=master)](https://fuzzit.dev) [![Go Report](https://goreportcard.com/badge/github.com/fenny/express)](https://goreportcard.com/report/github.com/fenny/express) [![Sourcegraph](https://sourcegraph.com/github.com/fenny/express/-/badge.svg)](https://sourcegraph.com/github.com/fenny/express?badge)
+# Express for Go [![GoDoc](https://godoc.org/github.com/fenny/express?status.svg)](http://godoc.org/github.com/fenny/express) [![fuzzit](https://app.fuzzit.dev/badge?org_id=express&branch=master)](https://fuzzit.dev) [![Go Report](https://goreportcard.com/badge/github.com/fenny/express)](https://goreportcard.com/report/github.com/fenny/express)
 Express is a router framework build on top of the fastest HTTP package [FastHTTP](https://github.com/valyala/fasthttp) for GO.
 This library is inspired by one of the most populair and well known web frameworks [ExpressJS](https://github.com/expressjs/express).
 
-This project is in alpha stage, do not use in production
+**This project is in alpha stage, do not use in production**
 
 [Credits](#install)  
 [Getting started](#getting-started)  
@@ -178,5 +178,9 @@ app.Get("/user/:name", func(c *express.Context) {
 })
 ```
 
-## Credits
-You can provide multiple callback functions that behave like middleware to handle a request. By using the **Next()** function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call **Next()** it there’s no reason to proceed with the to the next middleware route.
+## Credits & Thanks
+[Valyala (FastHTTP)](https://github.com/valyala)  
+[Julien Schmidt (httpRouter)](https://github.com/julienschmidt/httprouter)  
+[Savsgio (Atreugo)](https://github.com/savsgio/atreugo)  
+[Vincent Liuxiang (Lu)](https://github.com/savsgio/atreugo)  
+[Steambap (Koa-Tree-Router)](https://github.com/steambap/koa-tree-router)  
