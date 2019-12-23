@@ -16,8 +16,8 @@ import (
 func main() {
 	app := express.Router()
 
-	app.Get("/", func(c *express.Context) {
-		c.Send("Hello World!")
+	app.Get("/api/:user", func(c *express.Context) {
+		c.Send("Hello " + c.Params("user))
 	})
 
 	app.Listen(8080)
