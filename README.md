@@ -1,8 +1,13 @@
 # Express for Go
-Express is router framework build on top of the fastest HTTP package (https://github.com/valyala/fasthttp)[FastHTTP].
-This library is inspired by one of the most populair and well known web frameworks (https://github.com/expressjs/express)[ExpressJS]
+Express is a router framework build on top of the fastest HTTP package [FastHTTP](https://github.com/valyala/fasthttp) for GO.
+This library is inspired by one of the most populair and well known web frameworks [ExpressJS](https://github.com/expressjs/express).
 
 This project is in alpha stage, do not use in production
+
+### Install
+```
+go get -u github.com/fenny/express
+```
 
 ### Getting started
 This app starts a server and listens on port 8080 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
@@ -13,22 +18,21 @@ package main
 import "github.com/fenny/express"
 
 func main() {
-	app := express.Router()
-
-	app.Get("/api/:user", func(c *express.Context) {
-		c.Set("x-dns-prefetch-control", "on")
-		c.Next()
-	})
-	app.Get("/api/:user", func(c *express.Context) {
-		c.Send("Hello " + c.Params("user))
-	})
-  app.All("/favicon.ico", func(c *express.Context) {
-		c.Status(204).Send("404 Not Found.")
-	})
-	app.All("*", func(c *express.Context) {
-		c.Status(404).Send("404 Not Found.")
-	})
-	app.Listen(8080)
+  app := express.Router()
+  app.Get("/favicon.ico", func(c *express.Context) {
+    c.Status(204)
+  })
+  app.Get("/api/:user", func(c *express.Context) {
+    c.Set("x-dns-prefetch-control", "on")
+    c.Next()
+  })
+  app.Get("/api/:user", func(c *express.Context) {
+    c.Send("Hello " + c.Params("user"))
+  })
+  app.All("*", func(c *express.Context) {
+    c.Status(404).Send("404 Not Found.")
+  })
+  app.Listen(8080)
 }
 ```
 
