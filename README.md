@@ -9,9 +9,7 @@ This app starts a server and listens on port 8080 for connections. The app respo
 ```go
 package main
 
-import (
-	"github.com/fenny/express"
-)
+import "github.com/fenny/express"
 
 func main() {
 	app := express.Router()
@@ -94,7 +92,7 @@ The name of route parameters must be made up of “word characters” ([A-Za-z0-
 ```
 
 ### Route Handlers
-
+You can provide multiple callback functions that behave like middleware to handle a request. By using the Next() function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call Next() it there’s no reason to proceed with the to the next middleware route.
 
 ### API reference
 The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
