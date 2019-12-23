@@ -30,19 +30,19 @@ func main() {
 
 ### Route paths
 Here are some examples of route paths based on strings.  
-This route path will match requests to the root route, /.
+This route path will match requests to the root route, **/**.
 ```go
 app.Get("/", func(c *express.Context) {
   c.Send("/")
 })
 ```
-This route path will match requests to /about.
+This route path will match requests to **/about**.
 ```go
 app.Get("/about", func(c *express.Context) {
   c.Send("/about")
 })
 ```
-This route path will match requests to /random.text.
+This route path will match requests to **/random.text**.
 ```go
 app.Get("/random.text", func(c *express.Context) {
   c.Send("/random.text")
@@ -55,7 +55,7 @@ app.Get("/ab?cd", func(c *express.Context) {
   c.Send("/ab?cd")
 })
 ```
- ~~This route path will match **abcd, abbcd, abbbcd**, and so on. ~~
+ ~~This route path will match **abcd**, **abbcd**, **abbbcd**, and so on.~~
 ```go
 app.Get("/ab+cd", func(c *express.Context) {
   // This doesn't work, have to fix it later
@@ -71,7 +71,7 @@ app.Get("/ab(cd)?e", func(c *express.Context) {
 ```
 
 ### Route parameters
-Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values can be retreived with Params(key string), with the name of the route parameter specified in the path as their respective keys.
+Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values can be retreived with **Params(key string)**, with the name of the route parameter specified in the path as their respective keys.
 
 ```
 Route path:  /users/:userId/books/:bookId
@@ -92,7 +92,7 @@ The name of route parameters must be made up of “word characters” ([A-Za-z0-
 ```
 
 ### Route Handlers
-You can provide multiple callback functions that behave like middleware to handle a request. By using the Next() function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call Next() it there’s no reason to proceed with the to the next middleware route.
+You can provide multiple callback functions that behave like middleware to handle a request. By using the **Next()** function you can continue to the next middleware. You can use this mechanism to impose pre-conditions on a route, don't call **Next()** it there’s no reason to proceed with the to the next middleware route.
 
 ### API reference
 The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
