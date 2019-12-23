@@ -17,6 +17,10 @@ func main() {
 	app := express.Router()
 
 	app.Get("/api/:user", func(c *express.Context) {
+		c.Set("Server", "Express")
+		c.Next()
+	})
+	app.Get("/api/:user", func(c *express.Context) {
 		c.Send("Hello " + c.Params("user))
 	})
 	app.All("*", func(c *express.Context) {
