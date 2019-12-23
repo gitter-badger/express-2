@@ -4,7 +4,7 @@ This library is inspired by one of the most populair and well known web framewor
 
 **This project is in alpha stage, do not use in production**
 
-<p align="center">
+<p align="left">
   <img height="100" src="https://i.imgur.com/Jh2BZ42.png">
 </p>
 
