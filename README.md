@@ -4,7 +4,7 @@ An Express inspired web router for Go using Fasthttp engine
 This project is in alpha stage, do not use in production
 
 ### Getting started
-This app starts a server and listens on port 3000 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
+This app starts a server and listens on port 8080 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
 
 ```go
 package main
@@ -19,7 +19,9 @@ func main() {
 	app.Get("/api/:user", func(c *express.Context) {
 		c.Send("Hello " + c.Params("user))
 	})
-
+  app.All("*", func(c *express.Context) {
+    c.Status(404).Send("404 Not Found.")
+  })
 	app.Listen(8080)
 }
 ```
