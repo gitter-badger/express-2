@@ -1,9 +1,9 @@
-# express
+# Express running on FastHTTP
 An Express inspired web router for Go using Fasthttp engine
 
 This project is in alpha stage, do not use in production
 
-# Getting started
+### Getting started
 This app starts a server and listens on port 3000 for connections. The app responds with “Hello World!” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
 
 ```go
@@ -25,7 +25,7 @@ func main() {
 ```
 
 ### API Documentation
-The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation and by convention, the object is always referred to as '**c**'.
+The ***express.Context** struct represents the HTTP request and response and has properties for the request query string, parameters, body, HTTP headers, and so on. In this documentation, the struct is always referred to as '**c**'.
 
 ```go
 app.Get("/user/:name", func(c *express.Context) {
