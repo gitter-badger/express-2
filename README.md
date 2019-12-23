@@ -84,5 +84,10 @@ app.Get("/user/:name", func(c *express.Context) {
   // Status(code int) sets the response HTTP status code to statusCode and send its string representation as the response body. It is a chainable method.
   c.Status(500)
   c.Status(200).Send("Woohoo")
+
+  // Type(extension string) Sets the Content-Type HTTP header to the MIME type as determined by the strings file extention
+  c.Type("json") // => c.Set("Content-Type", "application/json")
+  c.Type("html") // => c.Set("Content-Type", "text/html")
+  c.Type("html") // => c.Set("png", "image/png")
 })
 ```
