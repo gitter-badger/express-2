@@ -1,5 +1,6 @@
-# Express running on FastHTTP
-An Express inspired web router for Go using Fasthttp engine
+# Express for Go
+Express is router framework build on top of the fastest HTTP package (https://github.com/valyala/fasthttp)[FastHTTP].
+This library is inspired by one of the most populair and well known web frameworks (https://github.com/expressjs/express)[ExpressJS]
 
 This project is in alpha stage, do not use in production
 
