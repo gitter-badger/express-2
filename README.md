@@ -37,6 +37,8 @@ func main() {
     c.Status(204)
   })
   app.Get("/api/*", func(c *express.Context) {
+    // c.Params("*")
+    // c.Url()
     c.Set("x-dns-prefetch-control", "on")
     c.Next()
   })
