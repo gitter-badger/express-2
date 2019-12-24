@@ -17,7 +17,7 @@ import "github.com/fenny/express"
 
 func main() {
   app := express.Router()
-  app.Get("/hello/:world", func(c *express.Context) {
+  app.Get("/hello/:world/:optional?", func(c *express.Context) {
     c.SendString("Hello " + c.Params("world"))
   })
   app.Listen(8080)
@@ -36,7 +36,7 @@ ExpressJS Req/Sec **17.33k** Latency **20.28ms**
 const express = require('express')
 const app = express()
 
-app.get('/hello/:world', (req, res) => {
+app.get('/hello/:world/:optional?', (req, res) => {
   res.send('Hello ' + req.params.world)
 })
 
