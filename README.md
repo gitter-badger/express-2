@@ -4,57 +4,9 @@ This library is inspired by one of the most populair and well known web framewor
 
 **This project is in alpha stage, do not use in production**
 
-Express Go is **9** times faster than Express JS
-
-```
-wrk -t1 -c400 -d10s http://127.0.0.1:8080/hello/world
-```
-ExpressGo Req/Sec: **155.54k** Latency **1.36ms**
-```go
-package main
-
-import "github.com/fenny/express"
-
-func main() {
-  app := express.Router()
-  app.Get("/hello/:world/:optional?", func(c *express.Context) {
-    c.SendString("Hello " + c.Params("world"))
-  })
-  app.Listen(8080)
-}
-// Running 10s test @ http://127.0.0.1:8080/hello/world
-//   1 threads and 400 connections
-//   Thread Stats   Avg      Stdev     Max   +/- Stdev
-//     Latency     1.36ms  232.87us   5.31ms   70.82%
-//     Req/Sec   155.54k     4.28k  158.78k    79.00%
-//   1482083 requests in 10.05s, 206.36MB read
-// Requests/sec: 155477.31
-// Transfer/sec:     20.53MB
-```
-ExpressJS Req/Sec **17.33k** Latency **20.28ms**
-```javascript
-const express = require('express')
-const app = express()
-
-app.get('/hello/:world/:optional?', (req, res) => {
-  res.send('Hello ' + req.params.world)
-})
-
-app.listen(8080)
-// Running 10s test @ http://127.0.0.1:8080/hello/world
-//   1 threads and 400 connections
-//   Thread Stats   Avg      Stdev     Max   +/- Stdev
-//     Latency    20.28ms    3.18ms  87.95ms   95.16%
-//     Req/Sec    17.33k     2.88k   20.81k    91.00%
-//   192413 requests in 10.03s, 39.45MB read
-// Requests/sec:  17190.85
-// Transfer/sec:      3.93MB
-```
-
 <p align="left">
   <img height="100" src="https://i.imgur.com/Jh2BZ42.png">
 </p>
-
 
 [Install](#install)
 [Getting started](#getting-started)  
@@ -111,6 +63,56 @@ In 30 ms processing time, the test result for 100, 1000, 5000 clients is:
 ![Benchmark (Round 3)](https://i.imgur.com/6pDQ2C1.png)
 
 We still need to optimize this library, somewhere in the code it's still CPU bound.
+Here are some comparrisons with ExpressJS framework
+
+Express Go is **9+** times faster than Express JS
+
+```
+wrk -t1 -c400 -d10s http://127.0.0.1:8080/hello/world
+```
+
+ExpressGo Req/Sec: **155.54k** Latency **1.36ms**
+```go
+package main
+
+import "github.com/fenny/express"
+
+func main() {
+  app := express.Router()
+  app.Get("/hello/:world/:optional?", func(c *express.Context) {
+    c.SendString("Hello " + c.Params("world"))
+  })
+  app.Listen(8080)
+}
+// Running 10s test @ http://127.0.0.1:8080/hello/world
+//   1 threads and 400 connections
+//   Thread Stats   Avg      Stdev     Max   +/- Stdev
+//     Latency     1.36ms  232.87us   5.31ms   70.82%
+//     Req/Sec   155.54k     4.28k  158.78k    79.00%
+//   1482083 requests in 10.05s, 206.36MB read
+// Requests/sec: 155477.31
+// Transfer/sec:     20.53MB
+```
+ExpressJS Req/Sec **17.33k** Latency **20.28ms**
+```javascript
+const express = require('express')
+const app = express()
+
+app.get('/hello/:world/:optional?', (req, res) => {
+  res.send('Hello ' + req.params.world)
+})
+
+app.listen(8080)
+// Running 10s test @ http://127.0.0.1:8080/hello/world
+//   1 threads and 400 connections
+//   Thread Stats   Avg      Stdev     Max   +/- Stdev
+//     Latency    20.28ms    3.18ms  87.95ms   95.16%
+//     Req/Sec    17.33k     2.88k   20.81k    91.00%
+//   192413 requests in 10.03s, 39.45MB read
+// Requests/sec:  17190.85
+// Transfer/sec:      3.93MB
+```
+
 
 ## Route paths
 Here are some examples of route paths based on strings.  
