@@ -92,10 +92,25 @@ func (r *Express) handler(fctx *fasthttp.RequestCtx) {
 	ctx := acquireCtx(fctx)
 
 	for _, route := range r.routes {
-		if route.method != method && !route.regex.MatchString(path) {
+		if route.method != method {
 			continue
 		}
+		// static path, wohoo no regex
+		if route.path == path {
+			route.handler(ctx)
 
+			if !ctx.next {
+				break
+			}
+			ctx.next = false
+			continue
+		}
+		// Oh boy, here we go *.*
+		if !route.regex.MatchString(path) {
+			continue
+		}
+		// Prolly best to check if we have params in the first place
+		// if route.params > 0 {
 		matches := route.regex.FindAllStringSubmatch(path, -1)
 
 		if len(matches) > 0 && len(matches[0]) > 1 {
