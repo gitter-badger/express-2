@@ -1,6 +1,7 @@
 package express
 
 import (
+	"fmt"
 	"io"
 	"mime"
 	"path/filepath"
@@ -34,6 +35,43 @@ func (ctx *Context) Next() {
 	ctx.params = nil
 }
 
+// // ParseRange https://expressjs.com/en/4x/api.html#req.ip
+// func (ctx *Context) ParseRange() string {
+// 	ctx.Fasthttp.Request.Header.Cookie("name")
+// 	//fasthttp.ParseByteRange(string("Range: bytes=0-1023"), 5000)
+// 	return ctx.Fasthttp.RemoteIP().String()
+// }
+
+// Cookie https://expressjs.com/en/4x/api.html#req.ip
+func (ctx *Context) Cookie(args ...interface{}) string {
+	ctx.Fasthttp.Request.Header.VisitAllCookie(func(k, v []byte) {
+		fmt.Println(string(v))
+		cook := &fasthttp.Cookie{}
+		fmt.Println(cook.ParseBytes(v))
+	})
+
+	if len(args) == 1 {
+		key, ok := args[0].(string)
+		if !ok {
+			panic("Invalid string")
+		}
+		return string(ctx.Fasthttp.Request.Header.Cookie(key))
+	} else if len(args) == 2 {
+		key, keyOk := args[0].(string)
+		val, valOk := args[1].(string)
+		if !keyOk || !valOk {
+			panic("Invalid key or value")
+		}
+		cook := &fasthttp.Cookie{}
+		cook.SetKey(key)
+		cook.SetValue(val)
+		// cook.Parse(src)
+		ctx.Fasthttp.Response.Header.SetCookie(cook)
+	}
+	//fasthttp.ParseByteRange(string("Range: bytes=0-1023"), 5000)
+	return ""
+}
+
 // ParseRange https://expressjs.com/en/4x/api.html#req.ip
 func (ctx *Context) ParseRange() string {
 	//fasthttp.ParseByteRange(string("Range: bytes=0-1023"), 5000)
@@ -47,12 +85,12 @@ func (ctx *Context) Ip() string {
 
 // Url https://expressjs.com/en/4x/api.html#req.originalUrl
 func (ctx *Context) Url() string {
-	return string(ctx.Fasthttp.RequestURI())
+	return b2s(ctx.Fasthttp.RequestURI())
 }
 
 // Query https://expressjs.com/en/4x/api.html#req.query
 func (ctx *Context) Query(key string) string {
-	return string(ctx.Fasthttp.QueryArgs().Peek(key))
+	return b2s(ctx.Fasthttp.QueryArgs().Peek(key))
 }
 
 // Params https://expressjs.com/en/4x/api.html#req.params
@@ -60,8 +98,9 @@ func (ctx *Context) Params(key string) string {
 	if ctx.params == nil {
 		return ""
 	}
-	for i := range ctx.params {
-		if ctx.params[i] == key {
+	length := len(*ctx.params)
+	for i := 0; i < length; i++ {
+		if (*ctx.params)[i] == key {
 			return ctx.values[i]
 		}
 	}
@@ -70,12 +109,12 @@ func (ctx *Context) Params(key string) string {
 
 // Method https://expressjs.com/en/4x/api.html#req.method
 func (ctx *Context) Method() string {
-	return string(ctx.Fasthttp.Method())
+	return b2s(ctx.Fasthttp.Method())
 }
 
 // Path https://expressjs.com/en/4x/api.html#req.path
 func (ctx *Context) Path() string {
-	return string(ctx.Fasthttp.Path())
+	return b2s(ctx.Fasthttp.Path())
 }
 
 // Secure https://expressjs.com/en/4x/api.html#req.secure
@@ -145,7 +184,7 @@ func (ctx *Context) Set(key string, value string) {
 
 // Get https://expressjs.com/en/4x/api.html#res.get
 func (ctx *Context) Get(key string) string {
-	return string(ctx.Fasthttp.Response.Header.Peek(key))
+	return b2s(ctx.Fasthttp.Response.Header.Peek(key))
 }
 
 // Redirect https://expressjs.com/en/4x/api.html#res.redirect
@@ -207,6 +246,16 @@ func (ctx *Context) Send(args ...interface{}) {
 	}
 }
 
+// SendByte https://expressjs.com/en/4x/api.html#res.send
+func (ctx *Context) SendByte(b []byte) {
+	ctx.Fasthttp.SetBody(b)
+}
+
+// SendString https://expressjs.com/en/4x/api.html#res.send
+func (ctx *Context) SendString(s string) {
+	ctx.Fasthttp.SetBodyString(s)
+}
+
 // SendFile https://expressjs.com/en/4x/api.html#res.sendFile
 func (ctx *Context) SendFile(path string) {
 	ctx.Type(filepath.Ext(path))
@@ -234,4 +283,14 @@ func (ctx *Context) Write(args ...interface{}) {
 	} else {
 		panic("You cannot have more than 1 argument")
 	}
+}
+
+// WriteBytes https://nodejs.org/docs/v0.4.7/api/all.html#response.write
+func (ctx *Context) WriteBytes(b []byte) {
+	ctx.Fasthttp.Write(b)
+}
+
+// WriteString https://nodejs.org/docs/v0.4.7/api/all.html#response.write
+func (ctx *Context) WriteString(s string) {
+	ctx.Fasthttp.WriteString(s)
 }
