@@ -44,7 +44,7 @@ func main() {
     c.Write("Hello " + c.Params("user"))
     c.Write("Are you there? " + c.Params("imhere"))
   })
-  app.All("*", func(c *express.Context) {
+  app.Use("*", func(c *express.Context) {
     c.Status(404).Send("404 Not Found.")
   })
   app.Listen(8080)
