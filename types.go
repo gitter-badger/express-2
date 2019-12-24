@@ -9,7 +9,7 @@ import (
 // Context :
 type Context struct {
 	next   bool
-	params []string
+	params *[]string
 	values []string
 	//params   *map[string]string
 	Fasthttp *fasthttp.RequestCtx
