@@ -65,7 +65,8 @@ In 30 ms processing time, the test result for 100, 1000, 5000 clients is:
 We still need to optimize this library, somewhere in the code it's still CPU bound.
 Here are some comparrisons with ExpressJS framework
 
-Express Go is **9+** times faster than Express JS
+Express Go can handle **9+** times the amount of Req/Sec than Express JS.  
+And a **20+** times less latency.
 
 ```
 wrk -t1 -c400 -d10s http://127.0.0.1:8080/hello/world
