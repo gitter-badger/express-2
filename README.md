@@ -11,7 +11,7 @@ This library is inspired by one of the most populair and well known web framewor
 
 [Install](#install)
 [Getting started](#getting-started)  
-[Benchmarks (Alpha)](#install)
+[Benchmarks (Alpha)](#benchmarks-alpha)
 [Route paths](#route-paths)  
 [Route parameters](#route-parameters)  
 [Route Handlers](#route-handlers)  
