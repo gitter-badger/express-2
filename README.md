@@ -8,9 +8,9 @@ This library is inspired by one of the most populair and well known web framewor
   <img height="100" src="https://i.imgur.com/Jh2BZ42.png">
 </p>
 
-[Install](#install)
+[Install](#install)  
 [Getting started](#getting-started)  
-[Benchmarks (Alpha)](#benchmarks-alpha)
+[Benchmarks (Alpha)](#benchmarks-alpha)  
 [Route paths](#route-paths)  
 [Route parameters](#route-parameters)  
 [Route Handlers](#route-handlers)  
