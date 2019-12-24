@@ -9,7 +9,7 @@ Express Go is **9** times faster than Express JS
 ```
 wrk -t1 -c400 -d10s http://127.0.0.1:8080/hello/world
 ```
-ExpressGo **Req/Sec 155.54k Latency 1.36ms**
+ExpressGo Req/Sec: **155.54k** Latency **1.36ms**
 ```go
 package main
 
@@ -31,7 +31,7 @@ func main() {
 // Requests/sec: 155477.31
 // Transfer/sec:     20.53MB
 ```
-ExpressJS **Req/Sec 17.33k Latency 20.28ms**
+ExpressJS Req/Sec **17.33k** Latency **20.28ms**
 ```javascript
 const express = require('express')
 const app = express()
