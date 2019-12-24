@@ -40,8 +40,9 @@ func main() {
     c.Set("x-dns-prefetch-control", "on")
     c.Next()
   })
-  app.Get("/api/:user", func(c *express.Context) {
-    c.Send("Hello " + c.Params("user"))
+  app.Get("/api/:user/:imhere?", func(c *express.Context) {
+    c.Write("Hello " + c.Params("user"))
+    c.Write("Are you there? " + c.Params("imhere"))
   })
   app.All("*", func(c *express.Context) {
     c.Status(404).Send("404 Not Found.")
