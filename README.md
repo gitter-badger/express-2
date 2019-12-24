@@ -232,6 +232,14 @@ app.Get("/user/:name", func(c *express.Context) {
   c.Send("Hello World!")
   c.Send([]byte("Hello World!"))
   c.Send(reader io.Reader, bodysize int)
+  c.SendString("Hello World!")
+  c.SendBytes([]byte("Hello World!)
+  
+  // Write(body) Appends to the HTTP response, the body parameter can be a []byte or string
+  c.Write("Hello World!")
+  c.Write([]byte("Hello World!"))
+  c.WriteString("Hello World!")
+  c.WriteBytes([]byte("Hello World!)
 
   // SendFile(path string) transfers the file at the given path. Sets the Content-Type response HTTP header field based on the filename’s extension.
   c.SendFile("tutorial.pdf")
