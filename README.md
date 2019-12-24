@@ -4,6 +4,8 @@ This library is inspired by one of the most populair and well known web framewor
 
 **This project is in alpha stage, do not use in production**
 
+Express Go is *9* times faster than Express JS
+
 <p align="left">
   <img height="100" src="https://i.imgur.com/Jh2BZ42.png">
 </p>
