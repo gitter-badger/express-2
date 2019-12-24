@@ -92,11 +92,9 @@ app.Get("/ab?cd", func(c *express.Context) {
   c.Send("/ab?cd")
 })
 ```
- ~~This route path will match **abcd**, **abbcd**, **abbbcd**, and so on.~~
+ This route path will match **abcd**, **abbcd**, **abbbcd**, and so on.
 ```go
 app.Get("/ab+cd", func(c *express.Context) {
-  // This doesn't work, have to fix it later
-  // ^/ab(.*)cd/?$ => ^ab/(.*)cd/?$
   c.Send("/ab+cd")
 })
 ```
