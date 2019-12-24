@@ -16,11 +16,11 @@ package main
 import "github.com/fenny/express"
 
 func main() {
-	app := express.Router()
-	app.Get("/hello/:world", func(c *express.Context) {
-		c.SendString("Hello " + c.Params("world"))
-	})
-	app.Listen(8080)
+app := express.Router()
+app.Get("/hello/:world", func(c *express.Context) {
+c.SendString("Hello " + c.Params("world"))
+})
+app.Listen(8080)
 }
 // Running 10s test @ http://127.0.0.1:8080/hello/world
 //   1 threads and 400 connections
