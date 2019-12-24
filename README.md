@@ -9,8 +9,9 @@ This library is inspired by one of the most populair and well known web framewor
 </p>
 
 
-[Credits](#install)  
+[Install](#install)
 [Getting started](#getting-started)  
+[Benchmarks (Alpha)](#install)
 [Route paths](#route-paths)  
 [Route parameters](#route-parameters)  
 [Route Handlers](#route-handlers)  
@@ -48,6 +49,19 @@ func main() {
   app.Listen(8080)
 }
 ```
+
+
+## Benchmarks (Alpha)
+**Concurrency**  
+In 30 ms processing time, the test result for 100, 1000, 5000 clients is:
+![Benchmark (Round 3)](https://i.imgur.com/TtlMK42.png)
+
+**Processing time**  
+0 ms, 10 ms, 100 ms, 500 ms processing time in handlers.
+![Benchmark (Round 3)](https://i.imgur.com/Auf621y.png)
+![Benchmark (Round 3)](https://i.imgur.com/6pDQ2C1.png)
+
+We still need to optimize this library, somewhere in the code it's still CPU bound.
 
 ## Route paths
 Here are some examples of route paths based on strings.  
