@@ -68,63 +68,70 @@ func (r *Express) Use(path string, handler handlerFunc) {
 
 // register :
 func (r *Express) register(method string, path string, handler handlerFunc) {
+	// Panic if first char does not begins with / or *
 	if path[0] != '/' && path[0] != '*' {
-		panic("Path must begin with slash '/'")
+		panic("Path must begin with slash '/' or wildcard '*'")
 	}
-
+	// Compile regix from path
 	regex, err := regexp.Compile(pathToRegex(path))
 	if err != nil {
 		panic(err)
 	}
-
-	params := findWildcards(path)
-
+	// Set parameters
+	params := findParams(path)
+	// Add to route
 	r.routes = append(r.routes, &route{method, path, regex, params, handler})
-
 }
 
 // handler :
 func (r *Express) handler(fctx *fasthttp.RequestCtx) {
-
+	// get path and method from main context
 	path := string(fctx.Path())
 	method := string(fctx.Method())
-
+	// get custom context from sync pool
 	ctx := acquireCtx(fctx)
-
+	// loop trough routes
 	for _, route := range r.routes {
+		// Skip route if method is not allowed
 		if route.method != method {
 			continue
 		}
-		// static path, wohoo no regex
+		// Check if path equals static
 		if route.path == path {
+			// Execute handler with context
 			route.handler(ctx)
-
+			// if next is not set, leave loop and release ctx
 			if !ctx.next {
 				break
 			}
+			// set next to false for next iteration
 			ctx.next = false
+			// continue to skip the regex calls
 			continue
 		}
-		// Oh boy, here we go *.*
+		// Skip route if regex does not match
 		if !route.regex.MatchString(path) {
 			continue
 		}
-		// Prolly best to check if we have params in the first place
-		// if route.params > 0 {
-		matches := route.regex.FindAllStringSubmatch(path, -1)
-
-		if len(matches) > 0 && len(matches[0]) > 1 {
-			ctx.params = route.params
-			ctx.values = matches[0][1:len(matches[0])]
+		// If we have parameters, lets find the matches
+		if len(route.params) > 0 {
+			matches := route.regex.FindAllStringSubmatch(path, -1)
+			// If matches, add params and values to context
+			if len(matches) > 0 && len(matches[0]) > 1 {
+				ctx.params = &route.params
+				ctx.values = matches[0][1:len(matches[0])]
+			}
 		}
+		// Execute handler with context
 		route.handler(ctx)
-
+		// if next is not set, leave loop and release ctx
 		if !ctx.next {
 			break
 		}
+		// set next to false for next iteration
 		ctx.next = false
 	}
-
+	// release context back into sync pool
 	releaseCtx(ctx)
 }
 
