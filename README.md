@@ -36,7 +36,7 @@ func main() {
   app.Get("/favicon.ico", func(c *express.Context) {
     c.Status(204)
   })
-  app.Get("/api/:user", func(c *express.Context) {
+  app.Get("/api/*", func(c *express.Context) {
     c.Set("x-dns-prefetch-control", "on")
     c.Next()
   })
