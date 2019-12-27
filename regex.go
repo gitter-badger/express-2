@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func findWildcards(path string) []string {
+func findParams(path string) []string {
 	params := []string{}
 	segments := strings.Split(path, "/")
 	for _, s := range segments {
