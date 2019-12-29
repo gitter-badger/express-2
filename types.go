@@ -31,3 +31,15 @@ type Express struct {
 	routes  []*route
 	methods []string
 }
+
+// Cookie
+type CookieOptions struct {
+	domain   string
+	expires  int
+	httpOnly bool
+	maxAge   int
+	path     string
+	secure   bool
+	signed   bool
+	sameSite string // "strict" or "laks"
+}

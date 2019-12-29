@@ -1,9 +1,80 @@
 package express
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
+	"strings"
 	"unsafe"
 )
+
+var replacer = strings.NewReplacer(":", "", "?", "")
+
+func haveParameters(path string) bool {
+	for i := 0; i < len(path); i++ {
+		if path[i] == ':' {
+			return true
+		}
+		if path[i] == '*' {
+			return true
+		}
+		if path[i] == '?' {
+			return true
+		}
+	}
+	return false
+}
+
+func stripParameters(path string) (params []string) {
+	segments := strings.Split(path, "/")
+	for _, s := range segments {
+		if s == "" {
+			continue
+		}
+		if strings.Contains(s, ":") {
+			s = replacer.Replace(s)
+			params = append(params, s)
+			continue
+		}
+		if strings.Contains(s, "*") {
+			params = append(params, "*")
+		}
+	}
+	return params
+}
+
+func pathToRegex(path string) (regex string) {
+	regex = "^"
+	segments := strings.Split(path, "/")
+	for _, s := range segments {
+		if s == "" {
+			continue
+		}
+		if strings.Contains(s, ":") {
+			if strings.Contains(s, "?") {
+				regex += "(?:/([^/]+?))?"
+			} else {
+				regex += "/(?:([^/]+?))"
+			}
+		} else if strings.Contains(s, "*") {
+			regex += "/(.*)"
+		} else {
+			regex += "/" + s
+		}
+	}
+	regex += "/?$"
+	return regex
+}
+
+func dirWalk(root string) (files []string, err error) {
+	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, path)
+		}
+		return nil
+	})
+	return files, err
+}
 
 // Credits to @savsgio
 // https://github.com/savsgio/gotils/blob/master/conv.go

@@ -2,101 +2,154 @@ package express
 
 import (
 	"fmt"
+	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/valyala/fasthttp"
 )
 
 // Router :
-func Router() *Express {
+func New() *Express {
 	return &Express{
 		methods: []string{"GET", "PUT", "POST", "DELETE", "HEAD", "PATCH", "OPTIONS", "TRACE", "CONNECT"},
 	}
 }
 
 // Get :
-func (r *Express) Get(path string, handler handlerFunc) {
-	r.register("GET", path, handler)
+func (r *Express) Get(args ...interface{}) {
+	r.register("GET", args...)
 }
 
 // Put :
-func (r *Express) Put(path string, handler handlerFunc) {
-	r.register("PUT", path, handler)
+func (r *Express) Put(args ...interface{}) {
+	r.register("PUT", args...)
 }
 
 // Post :
-func (r *Express) Post(path string, handler handlerFunc) {
-	r.register("POST", path, handler)
+func (r *Express) Post(args ...interface{}) {
+	r.register("POST", args...)
 }
 
 // Delete :
-func (r *Express) Delete(path string, handler handlerFunc) {
-	r.register("DELETE", path, handler)
+func (r *Express) Delete(args ...interface{}) {
+	r.register("DELETE", args...)
 }
 
 // Head :
-func (r *Express) Head(path string, handler handlerFunc) {
-	r.register("HEAD", path, handler)
+func (r *Express) Head(args ...interface{}) {
+	r.register("HEAD", args...)
 }
 
 // Patch :
-func (r *Express) Patch(path string, handler handlerFunc) {
-	r.register("PATCH", path, handler)
+func (r *Express) Patch(args ...interface{}) {
+	r.register("PATCH", args...)
 }
 
 // Options :
-func (r *Express) Options(path string, handler handlerFunc) {
-	r.register("OPTIONS", path, handler)
+func (r *Express) Options(args ...interface{}) {
+	r.register("OPTIONS", args...)
 }
 
 // Trace :
-func (r *Express) Trace(path string, handler handlerFunc) {
-	r.register("TRACE", path, handler)
+func (r *Express) Trace(args ...interface{}) {
+	r.register("TRACE", args...)
 }
 
 // Connect :
-func (r *Express) Connect(path string, handler handlerFunc) {
-	r.register("CONNECT", path, handler)
+func (r *Express) Connect(args ...interface{}) {
+	r.register("CONNECT", args...)
+}
+
+// All :
+func (r *Express) All(args ...interface{}) {
+	for _, method := range r.methods {
+		r.register(method, args...)
+	}
 }
 
 // Use :
-func (r *Express) Use(path string, handler handlerFunc) {
+func (r *Express) Use(args ...interface{}) {
 	for _, method := range r.methods {
-		r.register(method, path, handler)
+		r.register(method, args...)
+	}
+}
+
+// Get :
+func (r *Express) Static(mount string, dir string) {
+	clean_dir := filepath.Clean(dir)
+	files, err := dirWalk(dir)
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		file_mount := mount + strings.Replace(file, clean_dir, "", 1)
+		file_mount = strings.Replace(file_mount, "//", "/", 1)
+		file_path := file
+		if filepath.Base(file_path) == "index.html" {
+			r.routes = append(r.routes, &route{"GET", mount, nil, nil, func(c *Context) {
+				c.SendFile(file_path)
+			}})
+		}
+		r.routes = append(r.routes, &route{"GET", file_mount, nil, nil, func(c *Context) {
+			c.SendFile(file_path)
+		}})
 	}
 }
 
 // register :
-func (r *Express) register(method string, path string, handler handlerFunc) {
+func (r *Express) register(method string, args ...interface{}) {
+	var path string
+	var pathOk bool
+	var handler handlerFunc
+	var handlerOk bool
+	if len(args) == 1 {
+		handler, handlerOk = args[0].(handlerFunc)
+		if !handlerOk {
+			panic("Invalid handler")
+		}
+	} else if len(args) == 2 {
+
+		path, pathOk = args[0].(string)
+		handler, handlerOk = args[1].(func(*Context))
+
+		if !pathOk || !handlerOk {
+			panic("Invalid path or handler")
+		}
+	}
 	// Panic if first char does not begins with / or *
 	if path[0] != '/' && path[0] != '*' {
 		panic("Path must begin with slash '/' or wildcard '*'")
 	}
+
 	// Compile regix from path
 	regex, err := regexp.Compile(pathToRegex(path))
 	if err != nil {
-		panic(err)
+		panic("Invalid url pattern: " + path)
 	}
-	// Set parameters
-	params := findParams(path)
-	// Add to route
-	r.routes = append(r.routes, &route{method, path, regex, params, handler})
+	// Strip parameters from path
+	params := stripParameters(path)
+	if haveParameters(path) {
+		r.routes = append(r.routes, &route{method, path, regex, params, handler})
+	} else {
+		r.routes = append(r.routes, &route{method, path, nil, nil, handler})
+	}
 }
 
 // handler :
 func (r *Express) handler(fctx *fasthttp.RequestCtx) {
-	// get path and method from main context
-	path := string(fctx.Path())
-	method := string(fctx.Method())
 	// get custom context from sync pool
 	ctx := acquireCtx(fctx)
+	// get path and method from main context
+	path := ctx.Path()
+	method := ctx.Method()
 	// loop trough routes
 	for _, route := range r.routes {
 		// Skip route if method is not allowed
 		if route.method != method {
 			continue
 		}
-		// Check if path equals static
+		// First check if we match a static path
 		if route.path == path {
 			// Execute handler with context
 			route.handler(ctx)
@@ -106,17 +159,17 @@ func (r *Express) handler(fctx *fasthttp.RequestCtx) {
 			}
 			// set next to false for next iteration
 			ctx.next = false
-			// continue to skip the regex calls
+			// continue to go to the next route
 			continue
 		}
 		// Skip route if regex does not match
-		if !route.regex.MatchString(path) {
+		if route.regex == nil || !route.regex.MatchString(path) {
 			continue
 		}
 		// If we have parameters, lets find the matches
-		if len(route.params) > 0 {
+		if route.params != nil && len(route.params) > 0 {
 			matches := route.regex.FindAllStringSubmatch(path, -1)
-			// If matches, add params and values to context
+			// If we have matches, add params and values to context
 			if len(matches) > 0 && len(matches[0]) > 1 {
 				ctx.params = &route.params
 				ctx.values = matches[0][1:len(matches[0])]

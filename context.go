@@ -42,21 +42,38 @@ func (ctx *Context) Next() {
 // 	return ctx.Fasthttp.RemoteIP().String()
 // }
 
-// Cookie https://expressjs.com/en/4x/api.html#req.ip
-func (ctx *Context) Cookie(args ...interface{}) string {
+func (ctx *Context) Cookies(f func(key string, val string)) {
 	ctx.Fasthttp.Request.Header.VisitAllCookie(func(k, v []byte) {
-		fmt.Println(string(v))
-		cook := &fasthttp.Cookie{}
-		fmt.Println(cook.ParseBytes(v))
+		f(string(k), string(v))
 	})
+}
 
+// Cookie https://expressjs.com/en/4x/api.html#req.ip
+func (ctx *Context) ClearCookie(args ...interface{}) {
+	if len(args) == 0 {
+		// remove all cookies
+		ctx.Fasthttp.Request.Header.VisitAllCookie(func(k, v []byte) {
+			ctx.Fasthttp.Response.Header.DelClientCookie(string(k))
+		})
+	} else if len(args) == 1 {
+		// remove specific cookie
+		key, keyOk := args[0].(string)
+		if !keyOk {
+			panic("Invalid cookie key")
+		}
+		ctx.Fasthttp.Response.Header.DelClientCookie(key)
+	}
+}
+
+// Cookie
+func (ctx *Context) Cookie(args ...interface{}) string {
 	if len(args) == 1 {
 		key, ok := args[0].(string)
 		if !ok {
 			panic("Invalid string")
 		}
-		return string(ctx.Fasthttp.Request.Header.Cookie(key))
-	} else if len(args) == 2 {
+		return b2s(ctx.Fasthttp.Request.Header.Cookie(key))
+	} else if len(args) > 1 {
 		key, keyOk := args[0].(string)
 		val, valOk := args[1].(string)
 		if !keyOk || !valOk {
@@ -65,10 +82,54 @@ func (ctx *Context) Cookie(args ...interface{}) string {
 		cook := &fasthttp.Cookie{}
 		cook.SetKey(key)
 		cook.SetValue(val)
-		// cook.Parse(src)
+		if len(args) > 2 {
+			fmt.Println(args[2])
+			opt, optOk := args[2].(*CookieOptions)
+			if !optOk {
+				panic("Invalid cookie options")
+			}
+			// domain   string
+			// expires  int
+			// httpOnly bool
+			// maxAge   int
+			// path     string
+			// secure   bool
+			// signed   bool
+			// sameSite string
+			fmt.Println(opt)
+			// if *opt.domain != "nil" {
+			// 	cook.SetDomain(*opt.domain)
+			// }
+			// cook.SetExpire(time.Tuesday)
+			// cook.SetHTTPOnly(true)
+			// cook.SetMaxAge(10)
+			// cook.SetPath("/")
+			// cook.SetSecure(true)
+			// cook.SetSameSite(true)
+			//
+			// if opt.domain != "" {
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// if opt.expires != 0 {
+			//
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// if opt.httpOnly != "" {
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// if opt.domain != "" {
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// if opt.domain != "" {
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// if opt.domain != "" {
+			// 	cook.SetDomain(opt.domain)
+			// }
+			// optional cookie parameters
+		}
 		ctx.Fasthttp.Response.Header.SetCookie(cook)
 	}
-	//fasthttp.ParseByteRange(string("Range: bytes=0-1023"), 5000)
 	return ""
 }
 
@@ -124,10 +185,7 @@ func (ctx *Context) Secure() bool {
 
 // Xhr https://expressjs.com/en/4x/api.html#req.xhr
 func (ctx *Context) Xhr() bool {
-	if ctx.Get("X-Requested-With") == "XMLHttpRequest" {
-		return true
-	}
-	return false
+	return ctx.Get("X-Requested-With") == "XMLHttpRequest"
 }
 
 // Protocol https://expressjs.com/en/4x/api.html#req.protocol
